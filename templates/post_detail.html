@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>{{ post.title }}</h2>
+    <p>{{ post.content }}</p>
+
+    <h4>Comments</h4>
+    <ul>
+        {% for comment in comments %}
+            <li>
+                <p>{{ comment.user.username }} said: {{ comment.content }}</p>
+                <p>Posted on {{ comment.created_at }}</p>
+            </li>
+        {% empty %}
+            <p>No comments yet. Be the first to comment!</p>
+        {% endfor %}
+    </ul>
+
+    {% if user.is_authenticated %}
+        <h4>Add a comment</h4>
+        <form method="post">
+            {% csrf_token %}
+            {{ comment_form.as_p }}
+            <button type="submit">Submit</button>
+        </form>
+    {% else %}
+        <p><a href="{% url 'login' %}">Log in</a> to leave a comment.</p>
+    {% endif %}
+
+{% endblock %}

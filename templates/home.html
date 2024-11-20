@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock title %}
+{% block content %}
+{% if user.is_authenticated %}
+    Hi {{ user.username }}!
+{% endif %}
+
+<h4>Latest Posts</h4>
+<ul>
+    {% for post in posts %}
+        <li style="display: flex; align-items: center; margin-bottom: 20px;">
+            <img style='width: 200px; border-radius: 15px;' src="{{ post.image.url }}" alt="{{ post.title }}" width="300px" style="margin-right: 20px;">
+            <div style="padding: 3%;">
+                {{ post.created_by.username }} 
+                {% if user.is_authenticated and user != post.created_by %}
+                    <button id="follow-button-{{ post.created_by.id }}" class="follow-button" data-user-id="{{ post.created_by.id }}">
+                        {% if user in post.created_by.followers.all %}
+                            Unfollow
+                        {% else %}
+                            Follow
+                        {% endif %}
+                    </button>
+                    <p id="follow-count-{{ post.created_by.id }}">{{ post.created_by.followers.count }} Followers</p>
+                {% endif %}
+                <h3>{{ post.title }}</h3>
+                <p>By {{ post.author }}</p>
+                <p>Genre: {{ post.genre }}</p>
+                <p>{{ post.content }}</p>
+                <button type="button" id="like-button-{{ post.id }}" class="like-button">
+                    {% if user in post.likes.all %}
+                        Unlike
+                    {% else %}
+                        Like
+                    {% endif %}
+                </button>
+                <p id="like-count-{{ post.id }}">{{ post.total_likes }} likes</p>
+
+                <a href="https://kdgnpc98-8000.uks1.devtunnels.ms/">Download Book</a><br>
+            </div>
+        </li>
+    {% empty %}
+        <p>No posts found.</p>
+    {% endfor %}
+</ul>
+
+<script>
+    document.querySelectorAll('.like-button').forEach(function(button) {
+        button.addEventListener('click', function() {
+            const postId = this.id.split('-')[2];
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', `/posts/like/${postId}/`);  
+            xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    const response = JSON.parse(xhr.responseText);
+                    const likeButton = document.getElementById(`like-button-${postId}`);
+                    const likeCount = document.getElementById(`like-count-${postId}`);
+                    likeButton.innerText = response.liked ? 'Unlike' : 'Like';
+                    likeCount.innerText = `${response.total_likes} likes`;
+                }
+            };
+            xhr.send();
+        });
+    });
+
+    document.querySelectorAll('.follow-button').forEach(function(button) {
+        button.addEventListener('click', function() {
+            const userId = this.dataset.userId; 
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', `posts/follow/${userId}/`);  
+            xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}'); 
+
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    const response = JSON.parse(xhr.responseText); 
+                    const followButton = document.getElementById(`follow-button-${userId}`); 
+                    const followCount = document.getElementById(`follow-count-${userId}`); 
+                    followButton.innerText = response.followed ? 'Unfollow' : 'Follow';
+                    followCount.innerText = `${response.followers_count} Followers`;
+                }
+            };
+
+            xhr.send(); 
+        });
+    });
+</script>
+
+{% endblock content %}

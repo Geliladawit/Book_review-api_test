@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Upload{% endblock title %}
+{% block content %}
+<h2>Create Post</h2>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label for="id_title">Book Title:</label>
+    {{ form.title }}
+    <br>
+    <label for="id_title">Author:</label>
+    {{ form.author }}
+    <br>
+    <label for="id_title">Genre:</label>
+    {{ form.genre }}
+    <br>
+    <label for="id_content">Write Review:</label>
+    {{ form.content }}
+    <br>
+    <label for="id_image">Book Cover:</label>
+    {{ form.image }}
+    <br>
+    <button type="submit">Post</button>
+</form>
+{% endblock content %}

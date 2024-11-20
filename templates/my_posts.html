@@ -1,0 +1,55 @@
+<<<<<<< HEAD
+{% extends 'base.html' %}
+{% block title %}My Posts{% endblock title %}
+{% block content %}
+    <h4>My Posts</h4>
+    <p>Followers: {{ followers_count }}</p>
+    <p>Following: {{ following_count }}</p>
+    <ul>
+        {% for post in posts %}
+            <li style="display: flex; align-items: center; margin-bottom: 20px;">
+                <img style='width: 200px; border-radius: 15px;' src="{{ post.image.url }}" alt="{{ post.title }}" width="300px" style="margin-right: 20px;">
+                <div style="padding: 3%;">
+                    <h3>{{ post.title }}</h3>
+                    <p>Genre: {{ post.genre }}</p>
+                    <p>{{ post.content }}</p>
+                    <p>{{ post.total_likes }} likes</p>
+                </div>
+            </li>
+            <div>
+                <p><a href="{% url 'post_edit' post.pk %}">Edit</a> |
+                    <a href="{% url 'post_delete' post.pk %}">Delete</a></p>
+            </div>
+        {% empty %}
+            <p>You haven't posted anything yet.</p>
+        {% endfor %}
+    </ul>
+{% endblock content %}
+=======
+{% extends 'base.html' %}
+{% block title %}My Posts{% endblock title %}
+{% block content %}
+    <h4>My Posts</h4>
+    <p>Followers: {{ followers_count }}</p>
+    <p>Following: {{ following_count }}</p>
+    <ul>
+        {% for post in posts %}
+            <li style="display: flex; align-items: center; margin-bottom: 20px;">
+                <img style='width: 200px; border-radius: 15px;' src="{{ post.image.url }}" alt="{{ post.title }}" width="300px" style="margin-right: 20px;">
+                <div style="padding: 3%;">
+                    <h3>{{ post.title }}</h3>
+                    <p>Genre: {{ post.genre }}</p>
+                    <p>{{ post.content }}</p>
+                    <p>{{ post.total_likes }} likes</p>
+                </div>
+            </li>
+            <div>
+                <p><a href="{% url 'post_edit' post.pk %}">Edit</a> |
+                    <a href="{% url 'post_delete' post.pk %}">Delete</a></p>
+            </div>
+        {% empty %}
+            <p>You haven't posted anything yet.</p>
+        {% endfor %}
+    </ul>
+{% endblock content %}
+>>>>>>> c3c8c527380597cc48d194b1529139671bd20a31
